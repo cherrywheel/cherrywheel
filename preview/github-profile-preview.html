@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>cherrywheel · profile preview</title>
+<style>
+:root { color-scheme: dark; --bg:#0d1117; --panel:#0d1117; --muted:#9198a1; --line:#30363d; --fg:#e6edf3; --link:#4493f8; --theme:#aa5d6a; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); font-family:-apple-system,BlinkMacSystemFont,Inter,'Segoe UI',sans-serif; font-size:14px; color:var(--fg); }
+.top { height:66px; background:#010409; border-bottom:1px solid #21262d; display:flex; align-items:center; padding:0 45px; gap:26px; color:#c9d1d9 }
+.logo {width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#f0f3f6;color:#0d1117;border-radius:50%;font-size:18px;font-weight:900}
+.nav {display:flex; gap:25px; font-size:13px;font-weight:600}
+.search {margin-left:auto; width:260px;border:1px solid #30363d;border-radius:7px; height:31px;padding:7px 10px;font-size:12px;color:#8b949e}
+.head2 {height:53px;border-bottom:1px solid #30363d;display:flex;gap:27px; align-items:center;padding-left:calc(50% - 405px); font-size:13px;}
+.head2 span {height:53px;padding-top:20px;white-space:nowrap;}
+.head2 .selected{font-weight:600;border-bottom:2px solid #f78166}
+.shell {display:grid; grid-template-columns:255px 1fr; gap:26px; width:1260px;max-width:calc(100% - 60px); margin:26px auto 0; align-items:start}
+.aside {padding:3px 5px}
+.avatar {width:236px;height:236px;border-radius:50%;background: radial-gradient(circle at 68% 25%,#682d39,transparent 48%), radial-gradient(circle at 35% 80%,#34463a,transparent 48%),linear-gradient(130deg,#1d1b21,#0b0a0d);border:1px solid #30363d;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow: inset 0 0 80px #0009}
+.avatar .sigil {font-size:66px;line-height:1;color:#d5aaad;font-family:Georgia,serif}
+.avatar .small {font-size:10px;color:#e0b6b6;letter-spacing:4px;line-height:1.7}
+.avatar-note {font-size:11px;color:#6e7681;margin-top:8px;margin-bottom:14px}
+.aside h1 {font-weight:650;letter-spacing:-.5px;font-size:23px;margin:6px 0 2px}
+.aside .handle {color:#8b949e;font-weight:300;font-size:19px;margin:0 0 16px}
+.aside .bio {font-size:14px;line-height:1.5;color:#d1d9e0}
+.follow {background:#21262d;border:1px solid #30363d;border-radius:6px;text-align:center;padding:7px;font-weight:600;margin:14px 0}
+.aside .extra{font-size:12px;color:#8b949e;line-height:2.2}
+.content {min-width:0}
+.repo-title {display:flex;align-items:center;justify-content:space-between;font-size:14px;margin:0 0 12px;color:#c9d1d9}
+.repo-title b {font-weight:600}
+.filename{font-size:12px;color:#9fa6af}
+.readme-card {border:1px solid var(--line); border-radius:7px; overflow:hidden; }
+.readme-head {height:50px;background:#0d1117;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 18px;font-weight:600;font-size:13px}
+.book-icon{font-size:17px}
+.markdown-body{padding:25px 35px 27px;line-height:1.62;font-size:14px}
+.markdown-body > p:first-child {margin-top:0}
+.markdown-body p {margin:12px 0 16px}
+.markdown-body p[align=center] {text-align:center}
+.markdown-body p img {vertical-align:middle; max-width:100%}
+.markdown-body h3 {border-bottom:1px solid #21262d;margin:30px 0 18px;padding-bottom:9px;font-size:18px;color:#f1e7e5;line-height:1.5}
+.markdown-body h3:first-of-type{margin-top:16px}
+.markdown-body pre{background:#151b23;border:1px solid #242b33;padding:17px 19px;overflow:auto;border-radius:6px;margin:13px 0 19px; font-size:12.5px;line-height:1.62}
+.markdown-body code {font-family:ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace;color:#d7b1b9;font-size:12px}
+.markdown-body pre code{color:#bfcbd1;font-size:12px}
+.markdown-body p code, .markdown-body td code{background:#262c36;padding:3px 5px;border-radius:4px;font-size:12px}
+.markdown-body a {color:var(--link);text-decoration:none;font-weight:600}
+.markdown-body strong{font-weight:600}
+.markdown-body table{width:100%;border-spacing:0;border-collapse:collapse;margin:12px 0 22px}
+.markdown-body th,.markdown-body td{padding:10px 12px;border:1px solid #30363d;text-align:left}
+.markdown-body th{background:#161b22}
+.markdown-body tr:nth-child(even){background:#161b22}
+.markdown-body details{padding:10px 14px;background:#151b23;border-radius:7px;border:1px solid #30363d;margin:17px 0 12px}
+.markdown-body summary{cursor:pointer;font-weight:550}
+.markdown-body sub{color:#b89b9d}
+.pins-label{font-size:14px;margin:25px 0 13px;font-weight:650}
+.pins{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pin{border:1px solid #30363d;border-radius:7px;padding:17px}
+.pin b{color:#4493f8;font-size:14px}
+.pin small{margin-left:9px;color:#8b949e;border:1px solid #30363d;padding:2px 7px;border-radius:10px;font-size:10px}
+.pin p {color:#8b949e;font-size:12px;line-height:1.5}
+.tag{color:#c1959c;font-size:12px}
+.disclaimer{font-size:11px;color:#777e8a;margin:30px 0 40px;text-align:center}
+@media(max-width:850px){.shell{display:block;width:auto;margin:20px}.aside{display:none}.head2{padding-left:20px}.top{padding:0 12px}.nav{display:none}.search{width:140px}.markdown-body{padding:12px}.pins{grid-template-columns:1fr}}
+
+.markdown-body blockquote { margin: 15px 0 18px; padding: 4px 0 4px 19px; border-left: 3px solid #884654; color: #d8afb3; font-family: Georgia,serif; font-size: 17px; font-style: italic; line-height: 1.6 }
+.markdown-body > img { display: block; margin: 24px auto 8px; }
+.markdown-body > table { border-spacing: 10px; border-collapse: separate; width: 100%; margin: 14px 0; }
+.markdown-body > table td { border: 1px solid #433039; border-radius: 5px; padding: 17px 18px; background: #13171d; }
+.markdown-body > table h3 { border: none; padding: 0; margin: 3px 0 9px; color: #e2c0c0; font-size: 19px; }
+.markdown-body > table h3 a { color: #d5a4a6; }
+.markdown-body table td sub { color: #a27a83; letter-spacing: .6px; }
+.markdown-body center { text-align:center; }
+.markdown-body > div[align="center"] { text-align:center; color: #ad8c91; margin-bottom: 22px }
+.markdown-body > div[align="center"] code { color: #d2b6b0 }
+.markdown-body > pre { background:#14181f; border:1px solid #443039; color:#c5b8b7 }
+.markdown-body > p img[src*="inscription"] { margin:0 auto; }
+.markdown-body p { margin-bottom:17px }
+.markdown-body > table th { color: #ad8387; background: #11151c; text-transform: lowercase; font-size: 12px; font-weight: 500; letter-spacing: .6px; border-color:#392832 }
+</style></head><body>
+<header class="top"><div class="logo">⌘</div><nav class="nav"><span>Product</span><span>Solutions</span><span>Resources</span><span>Open Source</span><span>Enterprise</span></nav><div class="search">⌕ &nbsp; Search or jump to...</div></header>
+<div class="head2"><span class="selected">◧ &nbsp; Overview</span><span>▤ &nbsp; Repositories &nbsp; <b>12</b></span><span>◬ &nbsp; Projects</span><span>☆ &nbsp; Stars</span></div>
+<div class="shell">
+<aside class="aside"><div class="avatar"><div class="sigil">✦</div><div class="small">saint//404</div></div><div class="avatar-note">avatar placeholder in this preview</div><h1>cherrywheel</h1><p class="handle">cherrywheel</p><p class="bio">the system had rules, i had questions</p><div class="follow">Follow</div><div class="extra">⌘ &nbsp; red team / software engineer<br>⌁ &nbsp; toronto, canada</div></aside>
+<main class="content"><div class="repo-title"><span><b>cherrywheel</b> <span class="filename">/ README.md</span></span><span class="filename">⌄</span></div><section class="readme-card"><div class="readme-head"><span class="book-icon">▤</span> README.md</div><article class="markdown-body"><p align="center">
+  <img src="../assets/saint__404.png" alt="saint//404 / cherrywheel" width="100%">
+</p>
+
+<p align="center">
+  <img src="../assets/inscription.png" alt="the system had rules, i had questions" width="88%">
+</p>
+
+<div align="center">
+
+<p><code>red team</code>   ✦   <code>systems programming</code>   ✦   <code>network engineering</code></p>
+</div>
+
+<br>
+
+<img src="../assets/01-dossier.png" alt="01 / the dossier / a brief study of the entity" width="100%">
+
+<blockquote>
+<p>i like my software understandable, my protocols documented and my bugs deeply inconvenient</p>
+</blockquote>
+<p>somewhere between packet captures and a debugger at 3 am, i got a little too interested in the things software was never supposed to do</p>
+<p>i write code, study failure modes and follow the interesting bits all the way down to the metal</p>
+<p><strong>the short version:</strong> offensive security, low-level programming, networks and an unreasonable amount of curiosity</p>
+<pre>
+  alias       cherrywheel
+  role        red team / software engineer
+  habitat     linux terminals and packet captures
+  status      404: acceptable assumptions not found
+</pre>
+
+<img src="../assets/02-instruments.png" alt="02 / instruments of disorder / tools are just questions with handles" width="100%">
+
+<table>
+<thead>
+<tr>
+  <th style="text-align:left"></th>
+  <th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:left"><strong>languages</strong></td>
+  <td style="text-align:left"><code>c</code>   <code>c++</code>   <code>python</code>   <code>erlang</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>environment</strong></td>
+  <td style="text-align:left"><code>linux</code>   <code>shell</code>   <code>git</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>networking</strong></td>
+  <td style="text-align:left"><code>tcp/ip</code>   <code>routing</code>   <code>wireguard</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>automation</strong></td>
+  <td style="text-align:left"><code>ansible</code></td>
+</tr>
+<tr>
+  <td style="text-align:left"><strong>obsessions</strong></td>
+  <td style="text-align:left"><code>red teaming</code>   <code>reverse engineering</code>   <code>protocol internals</code></td>
+</tr>
+</tbody>
+</table>
+<p><sub>not a stack of badges, just the instruments currently on the workbench</sub></p>
+<img src="../assets/03-evidence.png" alt="03 / the evidence / things that escaped the terminal" width="100%">
+
+<table>
+<tr>
+<td width="50%" valign="top">
+<sub>01 / NETWORK TOOLING</sub>
+<h3><a href="https://github.com/cherrywheel/speedtest">speedtest++</a></h3>
+<p>a c++ speed test client with multiple backends, result history and output made for both humans and scripts</p>
+<sub><code>c++</code> · <code>networking</code></sub>
+</td>
+<td width="50%" valign="top">
+<sub>02 / CROSS-PLATFORM CHAOS</sub>
+<h3><a href="https://github.com/cherrywheel/CN-Tower-C">cn tower</a></h3>
+<p>a text adventure rewritten in c and built for a frankly unnecessary number of architectures</p>
+<sub><code>c</code> · <code>systems</code></sub>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top">
+<sub>03 / INFRASTRUCTURE EXPERIMENTS</sub>
+<h3><a href="https://github.com/cherrywheel/Example-Ansible-Cisco-IX-17">cisco ios xe automation</a></h3>
+<p>an ansible example for network device configuration and ios xe workflows, experimental by design and not intended for production use</p>
+<sub><code>ansible</code> · <code>network automation</code></sub>
+</td>
+</tr>
+</table>
+
+<img src="../assets/04-signal.png" alt="04 / last known signal / transmission recovered from /dev/null" width="100%">
+
+<pre><code class="language-console">$ whoami
+cherrywheel
+
+$ cat /etc/motd
+curiosity is not a vulnerability
+but it makes finding them easier
+
+$ inspect --assumptions
+0 trusted, 17 pending review
+
+$ exit
+permission denied: unfinished business
+</code></pre>
+<details>
+<summary>classified / open at your own risk</summary>
+
+<br>
+
+<p>the cat has seen the stack trace and refuses to testify</p>
+</details>
+
+<br>
+
+<p align="center">
+  <img src="../assets/epilogue.png" alt="no gods, no warranties, only source code" width="85%">
+</p>
+
+</article></section>
+<div class="pins-label">Pinned</div><div class="pins"><div class="pin"><b>speedtest</b><small>Public</small><p>a lightweight c++ speed test client with multiple backends</p><span class="tag">● c++</span></div><div class="pin"><b>CN-Tower-C</b><small>Public</small><p>cross-platform text adventure rebuilt in c</p><span class="tag">● c</span></div><div class="pin"><b>Example-Ansible-Cisco-IX-17</b><small>Public</small><p>automation example for cisco ios xe networks</p><span class="tag">● ansible</span></div></div>
+<div class="disclaimer">layout preview — not a live github screenshot and not published</div></main></div>
+</body></html>
